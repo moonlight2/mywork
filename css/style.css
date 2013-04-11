@@ -1,0 +1,47 @@
+/* 
+    Document   : style
+    Created on : 11.04.2013, 9:49:41
+    Author     : ilia
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+#wrapper {
+    margin: 0 auto;
+    width: 1000px;
+    padding: 10px;
+}
+
+#content {
+    border: 1px solid;
+    overflow: hidden;
+    padding: 10px;
+}
+
+#sidebar {
+    float: left;
+    width: 300px;
+}
+#main-content {
+    float: left;
+    width: 630px;
+    border: 1px solid;
+    padding: 15px;
+}
+
+#main-content label {
+    width: 100px
+}
+
+.form-left-col {
+    float: left;
+    width: 250px
+}
+.form-right-col {
+    float: left;
+    width: 370px
+}
