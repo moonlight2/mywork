@@ -76,7 +76,12 @@ window.WineView = Backbone.View.extend({
             description: $('#description').val()
         });
         if (this.model.isNew()) {
-            app.wines.create(this.model);
+            var self = this;
+            app.wines.create(this.model, {
+                success: function() {
+                    app.navigate('wines/' + self.model.id, false);
+                }
+            });
         } else {
             this.model.save({
                 success: function() {
@@ -130,9 +135,7 @@ window.HeaderView = Backbone.View.extend({
     },
 
     newWine:function (event) {
-        if (app.wineView) app.wineView.close();
-        app.wineView = new WineView({model:new Wine()});
-        $('#main-content').html(app.wineView.render().el);
+        app.navigate('wines/new', true);
         return false;
     }
 });
@@ -143,7 +146,8 @@ window.HeaderView = Backbone.View.extend({
 var AppRouter = Backbone.Router.extend({
     routes: {
         "": "wineList",
-        "wines/:id": "wineDetails"
+        "wines/new": "newWine",
+        "wines/:id": "wineDetails",
     },
     initialize: function(){
         $('#header').html(new HeaderView().render().el);
@@ -153,8 +157,20 @@ var AppRouter = Backbone.Router.extend({
 
         this.winesView = new WineListView({model: this.wines});
         //this.wines.fetch(); // get data from server
-        this.wines.fetch();
+        var self = this;
+        this.wines.fetch({
+             success:function () {
+                self.wineListView = new WineListView({model:self.wines});
+                $('#sidebar').html(self.wineListView.render().el);
+                if (self.requestedId) self.wineDetails(self.requestedId);
+            }
+        });
         $('#sidebar').html(this.winesView.render().el);
+    },
+    newWine: function() {
+        if (app.wineView) app.wineView.close();
+        app.wineView = new WineView({model:new Wine()});
+        $('#main-content').html(app.wineView.render().el);
     },
     wineDetails: function(id) {
 
